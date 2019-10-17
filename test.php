@@ -8,7 +8,9 @@ if(isset($_FILES['image'])) {
 
         CompressImage::setQuality(50);
 
-        CompressImage::setOutputPath("destination.jpg");
+        CompressImage::setOutputPrefix("media");
+
+        CompressImage::setOutputPath("image");
 
         print_r(CompressImage::compress($_FILES['image']['tmp_name']));
     }

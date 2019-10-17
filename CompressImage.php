@@ -2,24 +2,31 @@
 
 class CompressImage {
 
-    // image quality for reducing size
     private static $quality = 75;
 
-    // output image path
     private static $outputPath = null;
 
+    private static $outputPrefix = "image";
 
-    // set image quality
+    private static $outputImageName = null;
+
+    
     public static function setQuality(int $quality) {
         self::$quality = $quality;
     }
 
-    // set output path
+
     public static function setOutputPath(string $path) {
-        self::$outputPath = $path;
+        self::$outputImageName = self::$outputPrefix . "-" . uniqid() . ".jpg";
+        self::$outputPath = trim($path, "/") . "/" . self::$outputImageName;
     }
 
-    // compress image
+
+    static function setOutputPrefix(string $prefix) {
+        self::$outputPrefix = $prefix;
+    }
+
+
     public static function compress($source) {
 
         $info = getimagesize($source);
@@ -33,12 +40,12 @@ class CompressImage {
         elseif ($info['mime'] == 'image/png') 
             $image = imagecreatefrompng($source);
 
-        if(imagejpeg($image, self::$outputPath, self::$quality)) {
-            return self::$outputPath;
-        }
-        
-        return NULL;
-
+        imagejpeg($image, self::$outputPath, self::$quality);
+            
+        return array(
+            "path" => self::$outputPath,
+            "name" => self::$outputImageName
+        );
     }
     
 
